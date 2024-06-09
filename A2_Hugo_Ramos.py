@@ -326,11 +326,12 @@ paragraph_style = {
 
 # Define the layout for the home page
 home_page = html.Div([
+    html.Img(src='/assets/openfoodfacts_logo.png', style={'position': 'absolute', 'top': '20px', 'left': '20px', 'width': '50px', 'height': '50px'}),
     html.Div([
         html.H1("Welcome to the Nutritional Analysis Dashboard", style=title_style),
         html.P("This dashboard provides a comprehensive analysis of beverage products from the Open Food Facts database.", style=paragraph_style),
         html.P(f"The dataset contains information on {len(df)} beverage products, focusing on various nutritional aspects.", style=paragraph_style),
-        html.P("Data Source: [Open Food Facts](https://world.openfoodfacts.org/cgi/search.pl)", style=paragraph_style),
+        html.P(["Data Source: ", html.A("Open Food Facts", href="https://world.openfoodfacts.org/cgi/search.pl", target="_blank", style=paragraph_style)], style=paragraph_style),
         html.P("Data was collected randomly through the API of the above website. In our data sample, most product are present in the French Market.", style=paragraph_style),
         html.P("In the below graph you can see the distribution of the products on the map", style=paragraph_style),
         html.P("Click on the Analysis Page to find out more insights !!", style=paragraph_style),
@@ -352,11 +353,20 @@ home_page = html.Div([
                 )
             )
         ),
+        html.P("This dashboard is made in purpose of my Master in Business Analytics in the class Prototyping.", style=paragraph_style),
+        html.P([
+            "For every Query you can contact me at: ",
+            html.A("Linkedin", href="https://www.linkedin.com/in/hugo-christophe-ramos", target="_blank"),
+            " & ",
+            html.A("Github", href="https://github.com/Hugoramos99", target="_blank")
+        ], style=paragraph_style),
     ]),
     html.Div([
         dbc.NavLink("Go to Analysis Page", href="/analysis", external_link=True, className="btn btn-primary")
     ], style={'position': 'absolute', 'top': '20px', 'right': '20px'})  # Adjust the position here
 ])
+
+
 
 
 #Heatmap
@@ -381,6 +391,7 @@ heatmap_fig.update_layout(
 
 # Define the layout for the analysis page
 analysis_page = html.Div([
+    html.Img(src='/assets/openfoodfacts_logo.png', style={'position': 'absolute', 'top': '20px', 'left': '20px', 'width': '50px', 'height': '50px'}),
     html.Div([
         html.H1("Nutritional Analysis of Drinks", style=title_style),
         html.P("On this page you can see several graphs offering insights on the different Drink Product Categories.", style=paragraph_style),
@@ -460,7 +471,7 @@ def update_graphs(click_data, n_clicks, state_click_data):
     )
     brand_sugar_products_fig.update_layout(
         title=dict(
-            text='Brands: Number of Products vs. Average Sugar Content',
+            text='Number of products per Brands compared with amount of Suga',
             font=dict(size=24),
             y=0.95,
             x=0.5,
@@ -485,7 +496,7 @@ def update_graphs(click_data, n_clicks, state_click_data):
     # Top 5 unhealthiest drinks based on sugar content
     unhealthiest_drinks = filtered_df.nlargest(5, 'sugars_100g')
     unhealthiest_table = html.Div([
-        html.H2("Top 5 Unhealthiest Drinks (Highest Sugar)"),
+        html.H2("Top 5 Unhealthiest Drinks"),
         dash_table.DataTable(
             columns=[{"name": i, "id": i} for i in unhealthiest_drinks[['product_name', 'nutriscore_grade', 'sugars_100g', 'fat_100g']].columns],
             data=unhealthiest_drinks[['product_name', 'nutriscore_grade', 'sugars_100g', 'fat_100g']].to_dict('records'),
